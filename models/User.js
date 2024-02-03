@@ -9,6 +9,12 @@ const UserSchema = new mongoose.Schema({
     maxlength: 50,
     minlength: 3,
   },
+  lastName: {
+    type: String,
+    trim: true, //trim end and start whitespaces
+    maxlength: 20,
+    default: 'lastName',
+  },
   email: {
     type: String,
     required: [true, 'Please provide email'],
@@ -22,6 +28,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide password'],
     minlength: 6,
+  },
+  location: {
+    type: String,
+    trim: true, //trim end and start whitespaces
+    maxlength: 20,
+    default: 'my city',
   },
 })
 
