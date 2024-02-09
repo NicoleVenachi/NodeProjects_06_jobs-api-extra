@@ -44,9 +44,41 @@ const login = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
- console.log(req.body); //from the authenticated token
 
- console.log(req.user);
+  // console.log(req.body); //from the authenticated token
+  // console.log(req.user) //token info
+
+  //get info from request
+  const {email, name, lastName, location } = req.body
+
+  if (!email || !lastName || !name | !location) {
+    throw new BadRequestError('Please provide all values')
+  }
+
+  // lookf for the user in the DB and update
+  const user = await User.findOne({_id: req.user.userId})
+
+  console.log(user)
+  user.name = name
+  user.location = location
+  user.lastName = lastName
+  user.email = email
+
+  await user.save()
+
+  //  necesito crear new token? depedne, estamos pasando un posible valor diferente? enotnce sí, porque en el metodo de crear el token, se necesita la info del name (o Id. Damos además un new expiratio, lo alargamos
+  const token = user.createJWT()
+
+  // send repsonse
+  res.status(StatusCodes.OK).json({
+    user: { 
+      name: user.name,
+      lastName: user.lastName,
+      location: user.location,
+      email: user.email,
+      token 
+    },
+  })
 }
 
 
