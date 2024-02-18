@@ -5,6 +5,7 @@ const { BadRequestError, NotFoundError } = require('../errors')
 const getAllJobs = async (req, res) => {
   const {search, status, jobType, sort} = req.query;
   
+  // *** Object Setup (serach logic) ***
   // query object will be the obnjecto to find  data in the db according to filters
   // since it is a a protected route, lets extract from its token the user ID (to see only its specifc jobs
   const queryObject = {
@@ -20,15 +21,19 @@ const getAllJobs = async (req, res) => {
   // await al final, cuando ya haya hecho todas las sort conditions (for naw filtering by position and user)
   const result = Job.find(queryObject)
 
-  // chaining all of the remaining data filter properties
+  // *** chaining all of the remaining data filter properties ***
   if (status) {
     // result = result.WHERE(status === )
   }
+  if (jobType) {
+    
+  }
 
   
-  // default behaviuo -> Sino hay amtch, no retorna ningun Job, sino todos los Jobs (por mongoose 6, mongoose 5 es al reves)
-  // const jobs = await Job.find({ createdBy: req.user.userId }).sort('createdAt')
-  // res.status(StatusCodes.OK).json({ jobs, count: jobs.length })
+  // *** response
+  // default behavior -> Sino hay amtch, no retorna ningun Job, sino todos los Jobs (por mongoose 6, mongoose 5 es al reves)
+  const jobs = await result
+  res.status(StatusCodes.OK).json({ jobs, count: jobs.length })
 }
 const getJob = async (req, res) => {
   const {
