@@ -3,8 +3,32 @@ const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
 const getAllJobs = async (req, res) => {
-  const jobs = await Job.find({ createdBy: req.user.userId }).sort('createdAt')
-  res.status(StatusCodes.OK).json({ jobs, count: jobs.length })
+  const {search, status, jobType, sort} = req.query;
+  
+  // query object will be the obnjecto to find  data in the db according to filters
+  // since it is a a protected route, lets extract from its token the user ID (to see only its specifc jobs
+  const queryObject = {
+    createdBy: req.user.userId
+  }
+
+  // lets add the position name given in the filter
+  if (search) {
+    queryObject.position = {$regex: search, $options:'i'} // regular expression to llok for the value in any position, and i is to indicate it won't be case sensitive
+  }
+
+
+  // await al final, cuando ya haya hecho todas las sort conditions (for naw filtering by position and user)
+  const result = Job.find(queryObject)
+
+  // chaining all of the remaining data filter properties
+  if (status) {
+    // result = result.WHERE(status === )
+  }
+
+  
+  // default behaviuo -> Sino hay amtch, no retorna ningun Job, sino todos los Jobs (por mongoose 6, mongoose 5 es al reves)
+  // const jobs = await Job.find({ createdBy: req.user.userId }).sort('createdAt')
+  // res.status(StatusCodes.OK).json({ jobs, count: jobs.length })
 }
 const getJob = async (req, res) => {
   const {
