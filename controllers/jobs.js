@@ -18,23 +18,25 @@ const getAllJobs = async (req, res) => {
   }
 
 
+
+
+  // *** chaining all of the remaining data filter properties ***
+  if (status && status !== 'all') {
+    queryObject. status = status
+  }
+  if (jobType && jobType !== 'all') {
+    queryObject. jobType = jobType
+  }
+
   // await al final, cuando ya haya hecho todas las sort conditions (for naw filtering by position and user)
   const result = Job.find(queryObject)
 
-  // *** chaining all of the remaining data filter properties ***
-  if (status) {
-    // result = result.WHERE(status === )
-  }
-  if (jobType) {
-    
-  }
-
-  
   // *** response
   // default behavior -> Sino hay amtch, no retorna ningun Job, sino todos los Jobs (por mongoose 6, mongoose 5 es al reves)
   const jobs = await result
   res.status(StatusCodes.OK).json({ jobs, count: jobs.length })
 }
+
 const getJob = async (req, res) => {
   const {
     user: { userId },
