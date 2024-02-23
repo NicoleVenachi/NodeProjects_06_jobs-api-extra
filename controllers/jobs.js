@@ -28,8 +28,31 @@ const getAllJobs = async (req, res) => {
     queryObject. jobType = jobType
   }
 
+  
   // await al final, cuando ya haya hecho todas las sort conditions (for naw filtering by position and user)
-  const result = Job.find(queryObject)
+  let result = Job.find(queryObject)
+
+  // *** Adding the different queryiong methods ***
+  // -> Sort
+  switch (sort) {
+    case 'latest':
+      result = result.sort('-createdAt')
+      break;
+    
+    case 'oldest':
+      result = result.sort('createdAt')
+      break;
+    case 'z-a':
+      result = result.sort('-position')
+      break;
+
+    case 'a-z':
+      result = result.sort('position')
+      break;
+  
+    default:
+      break;
+  }
 
   // *** response
   // default behavior -> Sino hay amtch, no retorna ningun Job, sino todos los Jobs (por mongoose 6, mongoose 5 es al reves)
