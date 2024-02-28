@@ -46,7 +46,7 @@ const login = async (req, res) => {
 const updateUser = async (req, res) => {
 
   // console.log(req.body); //from the authenticated token
-  console.log(req.user) //token info
+  // console.log(req.user) //token info
 
   //get info from request
   const {email, name, lastName, location } = req.body
