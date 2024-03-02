@@ -2,6 +2,9 @@ const Job = require('../models/Job')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
+const moment = require('moment')
+const mongoose = require('mongoose')
+
 const getAllJobs = async (req, res) => {
   const {search, status, jobType, sort} = req.query;
   
@@ -133,7 +136,16 @@ const deleteJob = async (req, res) => {
 }
 
 
-const showStats = (req, res) => {
+const showStats = async (req, res) => {
+
+  //aggregation pipeline user jobs, grouped by job status and coun aggreagtain fuynction
+  let stats = await Job.aggregate([
+    {$match: {createdBy: mongoose.Types.ObjectId(req.user.userId)}}, //the type of the id es the mongoose objectId type
+    {$group: {_id: '$status', count: {$sum: 1}}}
+  ])
+
+  console.log(stats);
+
   
   res
     .status(StatusCodes.OK)
