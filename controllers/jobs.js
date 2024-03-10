@@ -144,12 +144,26 @@ const showStats = async (req, res) => {
     {$group: {_id: '$status', count: {$sum: 1}}}
   ])
 
+  stats = stats.reduce((acc, current) => {
+    const {_id: title, count} = current //pull data
+
+    acc[title] = count // statusName: numberOfOccurences
+    return acc;
+  }, {}  ) //{} returnitn an object
+
+  const defaultStats = {
+    pending: stats.pending || 0,
+    interview: stats.interview || 0,
+    declined: stats.declined || 0,
+  } // back-end validation (if no jobs created)
+
+
   console.log(stats);
 
   
   res
     .status(StatusCodes.OK)
-    .json({defaultStats: {}, monthlyApplications: []});
+    .json({defaultStats , monthlyApplications: []});
 
   // respopnse are the stats object and the applications per month
 }
