@@ -164,11 +164,23 @@ const showStats = async (req, res) => {
     { $limit: 6}
   ]);
 
-  console.log(stats);
-  console.log(monthlyApplications);
+  // refactor data on fronted expected format
+
+  monthlyApplications = monthlyApplications.map((item) => {
+    const { 
+      _id: {year, month},
+      count
+    } = item
+
+    const date = moment().month(month-1).year(year).format('MMM Y');
+    return {date, count}
+  }).reverse()
+
+  // console.log(stats);
+  // console.log(monthlyApplications);
 
   // send back interview status stats and inveriew applicatons number per month
-  res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications: [] });
+  res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 
   // respopnse are the stats object and the applications per month
 };
